@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+    </head>
+    <body>
+        <textarea id="dialog"></textarea>
+        <input type="text" id="message" name="message" placeholder="Enter your message">
+        <button id="submit" type="button">Send</button>
+        <script src="//unpkg.com/jquery"></script>
+        <script src="{{url_for('static', filename='js/main.js')}}"></script>
+    </body>
+</html>

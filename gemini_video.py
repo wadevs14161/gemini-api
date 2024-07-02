@@ -1,13 +1,7 @@
 class GeminiVideo:
     import google.generativeai as genai
-    from configparser import ConfigParser
     from google.generativeai.types import HarmCategory, HarmBlockThreshold
     import time
-
-    # Config Parser
-    config = ConfigParser()
-    config.read("config.ini")
-    genai.configure(api_key=config["Gemini"]["API_KEY"])
 
     # Set up the model
     model = genai.GenerativeModel(

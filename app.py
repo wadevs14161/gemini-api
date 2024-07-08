@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 
 from gemini_video import GeminiVideo
+from gemini_interview import interview_evaluate
 
 # Load environment variables
 load_dotenv('.env')
@@ -63,6 +64,21 @@ def video():
         return result
 
     return {"Status": "Video funcion is available now!"}
+
+
+@app.route("/interview_question", methods=["GET", "POST"])
+def interview_question():
+    if request.method == "POST":
+        question = request.form["question"]
+        user_answer = request.form["user_answer"]
+
+        # Request Gemini to evaluate the user's answer
+        result = interview_evaluate(question, user_answer)
+
+        return result
+    
+    return {"Status": "Interview question funcion is available now!"}
+
     
 
 if __name__ == "__main__":

@@ -1,10 +1,11 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, Response
 from flask import request
 from dotenv import load_dotenv
 import google.generativeai as genai
 
 from gemini_video import GeminiVideo
 from gemini_interview import interview_evaluate
+from gemini_tts import text_to_speech
 
 # Load environment variables
 load_dotenv('.env')
@@ -78,6 +79,21 @@ def interview_question():
         return result
     
     return {"Status": "Interview question funcion is available now!"}
+
+@app.route("/texttospeech", methods=["GET", "POST"])
+def tts():
+    if request.method == "POST":
+        # Get text from post request with key "text"
+        text = request.form["text"]
+
+        result = text_to_speech(text)
+
+        response = Response(result.audio_content, mimetype="audio/mpeg")
+        
+        return response
+        
+    
+    return {"Status": "Text to speech funcion is available now!"}
 
     
 

@@ -10,15 +10,13 @@ def interview_evaluate(question, user_answer):
             "max_output_tokens": 8192,
         },
         system_instruction="""
-            請根據問題和回答，對面試表現給予專業的，
-            1. 分析
-            2. 評價
-            3. 建議修改的回答
-            ，回傳的格式為json。
+            Please evaluate the user's response to the question below.
+            Give analysis / evaluation / suggested_modification each in 50 words.
+            Return the result in JSON format.
         """)
     
 
-    user_input = f"問題: {question}\n回答: {user_answer}"
+    user_input = f"Question: {question}\nUser's response: {user_answer}"
 
     response = model.generate_content(user_input)
 

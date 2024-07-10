@@ -1,3 +1,5 @@
 
 .env
 .venv
+
+google_secret_key.json

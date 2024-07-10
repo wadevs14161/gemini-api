@@ -6,6 +6,8 @@ import google.generativeai as genai
 from gemini_video import GeminiVideo
 from gemini_interview import interview_evaluate
 from gemini_tts import text_to_speech
+from gcp_gcs import gcs_signed_url_v4
+from upload import upload_audio
 
 # Load environment variables
 load_dotenv('.env')
@@ -86,11 +88,20 @@ def tts():
         # Get text from post request with key "text"
         text = request.form["text"]
 
-        result = text_to_speech(text)
+        # Call text to speech function to output the audio file in mp3 format
+        text_to_speech(text)
 
-        response = Response(result.audio_content, mimetype="audio/mpeg")
-        
-        return response
+        signed_url = gcs_signed_url_v4("wenshin-tts-bucket", "cloud_tts.mp3")
+
+        upload_url = signed_url.generate_upload_signed_url_v4()
+
+        upload_audio(upload_url)
+
+        download_url = signed_url.generate_download_signed_url_v4()
+
+        return download_url
+
+
         
     
     return {"Status": "Text to speech funcion is available now!"}

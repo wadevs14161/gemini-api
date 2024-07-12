@@ -1,7 +1,6 @@
 from flask import Flask, render_template, url_for, Response
 from flask import request
 from dotenv import load_dotenv
-import google.generativeai as genai
 
 from gemini_video import GeminiVideo
 from gemini_interview import interview_evaluate
@@ -22,21 +21,25 @@ def home():
 @app.route("/call_llm", methods=["POST"])
 def call_llm():
     if request.method == "POST":
-        from gemini_chat import chat, role
         print("POST!")
         data = request.form
         print(data)
+
+        from gemini_chat import GeminiChat
+
+        newChat = GeminiChat()
+
         to_llm = ""
-        if len(chat.history) > 0:
-            to_llm = data["message"]
+        if len(newChat.chat.history) > 0:
+            to_llm = data["usermsg"]
         else:
-            to_llm = role + data["message"]
+            to_llm = newChat.role + data["usermsg"]
         try:
-            result = chat.send_message(to_llm)
+            result = newChat.chat.send_message(to_llm)
         except Exception as e:
             print(e)
-            return "我媽來了，她說不能聊這個(雙手比叉)"
-        print(chat.history)
+            return "請注意，您的訊息可能包含不當內容，請重新輸入。"
+        print(newChat.chat.history)
         # remove \n at the end of the result
         return result.text.replace("\n", "")
     
@@ -47,14 +50,30 @@ def video():
 
         # Get video file from the request
         video = request.files["video"]
+        if not video:
+            return {"error": "No video file found"}
         video.save(video.filename)
+
+        prompt = ""
+        if "prompt" in request.form:
+            prompt = request.form["prompt"]
+        else:
+            prompt = '''
+                1. 請針對面試者下列的表現做出評分(1-10分):
+                - 視覺評價: 臉部情緒特徵、肢體動作、眼神交流、微笑是否自然、衣著整潔等。
+                - 言語內容: 1. 言語用字: 是否得體、2. 表達邏輯: 是否清晰、通順，抑或前後矛盾。
+                - 聽覺評價: 1.語速: 是否太快/太慢、2. 聲調: 是否沉穩/太高/太低、3. 言語和聲紋: 能否展現自信、大方、好相處的態度，抑或畏縮、沒自信。
+                
+                2. 請列出面試者的優點、缺點、整體表現、改進建議。
+                請以繁體中文及json格式呈現回答。
+            '''
 
         print(video.filename)
         # Upload the video file
         video_file = gemini_video.upload_video(video.filename)
 
         # Analyze the video
-        result = gemini_video.analyze_video(video_file)
+        result = gemini_video.analyze_video(video_file, prompt)
 
         # Delete the video file
         gemini_video.delete_video(video_file)
@@ -72,15 +91,29 @@ def video():
 @app.route("/interview_question", methods=["GET", "POST"])
 def interview_question():
     if request.method == "POST":
-        question = request.form["question"]
-        user_answer = request.form["user_answer"]
+        question, user_answer, system_instruction = "", "", ""
+
+        if "system_instruction" in request.form:
+            system_instruction = request.form["system_instruction"]
+        else:
+            system_instruction = """
+                Please evaluate the user's response to the question.
+                Give analysis / evaluation / suggested_modification each in 50 words.
+                Return the result in JSON format.
+            """
+        if "question" in request.form:
+            question = request.form["question"]
+
+        if "user_answer" in request.form:
+            user_answer = request.form["user_answer"]
+            
 
         # Request Gemini to evaluate the user's answer
-        result = interview_evaluate(question, user_answer)
+        result = interview_evaluate(system_instruction, question, user_answer)
 
         return result
     
-    return {"Status": "Interview question funcion is available now!"}
+    return {"Status": "Interview question function is available now!"}
 
 @app.route("/texttospeech", methods=["GET", "POST"])
 def tts():

@@ -97,9 +97,9 @@ def plot(result_json):
     figs["visual"] = fig_visual.to_json()
     figs["verbal"] = fig_verbal.to_json()
 
-    fig_visual.show()
-    fig_auditory.show()
-    fig_verbal.show()
+    # fig_visual.show()
+    # fig_auditory.show()
+    # fig_verbal.show()
 
     return figs
 

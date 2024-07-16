@@ -87,7 +87,7 @@ def video():
         # Upload the video file
         video_file = gemini_video.upload_video(video.filename)
 
-        # Analyze the video
+        # Analyze the video, result is json format
         result = gemini_video.analyze_video(video_file, prompt)
 
         # Delete the video file

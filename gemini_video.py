@@ -52,7 +52,7 @@ class GeminiVideo:
             [prompt, video_file], request_options={"timeout": 600}
         )
 
-        print(response.text)
+        # print(response.text)
         # print(type(response.text))
         import json
         result_json = json.loads(response.text[7:-4])

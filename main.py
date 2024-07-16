@@ -105,7 +105,14 @@ def video():
         # They are fig objects from plotly.graph_objects respectively
         figs = plot(result)
 
-        return figs
+        return_dict = {
+            "result": result,
+            "figs": figs
+        }
+
+        print(return_dict)
+        
+        return return_dict
         # return result
 
     return {"Status": "Video funcion is available now!"}

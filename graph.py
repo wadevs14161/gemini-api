@@ -60,7 +60,7 @@ def plot(result_json):
                 range=[0, 100]
             )),
         showlegend=True,
-        title="聽覺評價雷達圖"
+        title="聽覺評價"
     )
 
     # Create radar chart for visual evaluation
@@ -80,7 +80,7 @@ def plot(result_json):
                 range=[0, 100]
             )),
         showlegend=True,
-        title="視覺評價雷達圖"
+        title="視覺評價"
     )
 
     # Create bar chart for verbal evaluation
@@ -88,7 +88,7 @@ def plot(result_json):
         x=verbal_categories,
         y=verbal_values,
         labels={'x': '言語內容', 'y': '分數'},
-        title="言語內容評分",
+        title="言語內容",
         range_y=[0, 100]
     )
 

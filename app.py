@@ -98,22 +98,8 @@ def video():
         os.remove(video.filename)
         print("Deleted local file")
 
-        # Plot the result
-        from graph import plot
-
-        # figs is a dictionary of "auditory", "visual", "verbal" charts
-        # They are fig objects from plotly.graph_objects respectively
-        figs = plot(result)
-
-        return_dict = {
-            "result": result,
-            "figs": figs
-        }
-
-        print(return_dict)
         
-        return return_dict
-        # return result
+        return result
 
     return {"Status": "Video funcion is available now!"}
 
@@ -141,6 +127,8 @@ def interview_question():
         # Request Gemini to evaluate the user's answer
         result = interview_evaluate(system_instruction, question, user_answer)
 
+
+        # Return the result in JSON format
         return result
     
     return {"Status": "Interview question function is available now!"}

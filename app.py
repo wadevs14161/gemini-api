@@ -142,12 +142,26 @@ def tts():
         download_url = signed_url.generate_download_signed_url_v4()
 
         return download_url
-
-
-        
     
     return {"Status": "Text to speech funcion is available now!"}
 
+@app.route("/transcribe", methods=["GET", "POST"])
+def transcribe():
+    if request.method == "POST":
+        audio_file = request.files["audio_file"]
+
+        print(audio_file)
+
+        # Call the transcribe function
+        from gemini_transcribe import transcribe
+
+        transcript = transcribe(audio_file)
+
+        # return the transcript as http response
+        return transcript
+    
+
+    return {"Status": "Transcribe funcion is available now!"}
     
 
 if __name__ == "__main__":

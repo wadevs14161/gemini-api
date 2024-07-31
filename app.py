@@ -1,5 +1,5 @@
-from flask import Flask, render_template, url_for, Response
-from flask import request
+from flask import Flask, request
+from flask_cors import CORS
 from dotenv import load_dotenv
 
 from gemini_video import GeminiVideo
@@ -13,10 +13,11 @@ load_dotenv('.env')
 
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return {"Status": "Welcome to Gemini API for job x AI!"}
 
 @app.route("/call_llm", methods=["POST"])
 def call_llm():
